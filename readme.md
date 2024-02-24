@@ -85,7 +85,9 @@ _연습문제
 
 ### 02장 Node.js로 백엔드 입문하기
 _2.1 Node.js 소개
+
 _2.2 Node.js는 서버에서 어떻게 자바스크립트를 실행할까?
+
 __2.2.1 Node.js의 구성요소
 __2.2.2 자바스크립트 실행을 위한 V8 엔진
 
@@ -106,6 +108,7 @@ _2.4 Node.js 과연 쓸 만한가? (91)
 > 기본적으로 CPU를 하나만 사용. 멀티코어를 사용하려면 별도의 작업 필요.
 
 _2.5 나의 첫 Node.js 서버 프로그램(94)
+
 __2.5.1 hello.js 파일 생성 및 실행
 
 __2.5.2 curl 내려받기 및 테스트해보기
@@ -156,6 +159,7 @@ __3.6.3 Node.js 라이브러리로 만든 서버를 익스프레스로 구현하
     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
+> 크롬 확장 프로그램 JSON Viewer 를 설치하면, JSON 포맷된 형태로 브라우저에서 편하게 볼 수 있음.
 
 _3.7 익스프레스로 간단한 API 서버 만들기
 __3.7.1 게시판 API 코드 작성하기
@@ -168,18 +172,84 @@ __3.8.3 curl로 DELETE를 호출해 게시글 삭제하기
 _학습 마무리
 _연습문제
 
-04장 npm과 yarn으로 패키지 관리하기
+---
+
+### 04장 npm과 yarn으로 패키지 관리하기
 _4.1 npm 소개
+* <http://www.modulecounts.com> 이 사이트로 들어가면, 전 세계 패키지의 등록된 수와 트렌드를 볼 수 있음.
+> 이런 걸 보면 격세지감인 게. 우물 안 개구리였다는 게지. (사이트 열릴 때 너무 느려서 고장 난 줄..)
+> nuget도 이 전체 패키지들과 비교해서 보면, 그 수가 미미하달 수 밖에.
+> PyPI는 어떻구. 최근엔 신규 추가 건이 없음. 뭔일 있나?
+
 _4.2 패키지와 모듈
+* 패키지 : package.json 으로 정의한 코드 뭉치
+* 모듈 : node_modules 디렉터리 아래 있는 모든 것들. 여기 것들은 require() 함수로 읽을 수 있음.
+* CommonJS는 브라우저 뿐 아니라 서버 애플리케이션에서도 모듈 기능을 제공하기 위해 나온 모든 규약.
+> npm이 무거워지는 이유로 저자는 REPL에서 module.paths 를 쳐 보면 안다고 한다. 실행해 보니, npm은 현재 폴더에서 부터 상위로 가면서 node_module을 폴더를 모두 스캔하여 찾고 있다. 이게 무거워지는 원인이라고 한다. 이 대안으로 등장한 게 yarn 이란다.
+
 _4.3 package.json 파일을 만들기
+```
+npm init
+```
+* 위 명령어로 만들면 package.json 파일이 하나 생성됨.
+> 마크다운을 처리하며 공부하는데, VSCode에서 Markdown All in One 이라는 것을 깔고 보니, 엄청 편하다!
+>> 이걸 보면서 VSCode 의 Extension을 어떻게 개발하는 지도 궁금했다. Gemini의 답은 의외로 간단했다. 나중에 시간이 되면 나도 하나 만들어봐야겠다 싶다.
+* npm login, npm publish 등을 사용하면 배포까지 가능.
+> Node.js 패키지들은 시맨틱 버전을 사용. <메이저>.<마이너>.<패치>
+>> 추후에 package.json의 구성요소를 찾아보는 것도 좋을 듯.
+
 _4.4 패키지 설치, 업데이트, 삭제
+
 __4.4.1 패키지 설치하기
+```
+npm install [<@scope>]<name>@<tag/version/version range>
+```
+* 옵션에는 다음과 같은 것이 있음. -D (개발의존성), -g (프로젝트 디렉터리가 아닌 node가 설치된 곳에 의존성 패키지 설치 시)
+```
+npm install lodash
+npm install lodash@latest
+npm install lodash@4.17.21
+npm install lodash@">=4.17.0 <4.20.0"
+npm install jest -D
+```
+* package.json을 보면 jest 의 버전에 ^ 이 사용되었는데, 캐럿이라 부른다.
+* 깃헙에서 다운로드받기도 함
+```
+npm install http://github.com/lodash/lodash
+npm install http://github.com/lodash/lodash@4.17.21
+```
 __4.4.2 패키지 업데이트하기
+```
+npm update [-g] [패키지명1, 패키지명2 .. N]
+```
+* 버전에 ^이 사용된 것은 메이저이하는 모두 업데이트하겠다는 의미. 즉 1.X.X 일 경우, 2.0.0 미만까지는 모두받겠다는 의미임.
+* ~ 틸드라고 읽으며, 현재 지정한 버전의 마지막 자리 내 범위만 자동으로 업데이트 하겠나는 의미. 즉 0.0.1 보다 크고, 0.1.0 보다 작은 범위만 업데이트 한다는 의미.
+
 __4.4.3 설치한 패키지 확인하기
+```
+npm ls [@스코프/] 패키지명
+```
+* --depth=1 과 같이 사용하면, 의존성 패키지까지도 확인 가능.
+> --depth=2 로 보다보면, deduped 라는 문구가 나옴. 이는 중복된 패키지가 제거되었다는 의미임. 이는 디스크 공간의 낭비를 방지하기 위함 같음.
+
 __4.4.4 패키지 삭제하기
+```
+npm uninstall [@스코프/] 패키지명[@버전]
+```
+> 이부분에 대한 해설은 좀 짧은 것 같음. 다음 기회에 좀더 파 보면 될 것 같음.
+
 _4.5 스크립트 기능과 NPX
+* npm은 명령어를 지정해 실행하는 스크립트 기능도 제공
+ 
 __4.5.1 npm 스크립트 파일을 정의하기
+> package.json 과 같은 json 파일은 주석 사용이 불가함.
+* scripts 라는 항목에 명령을 넣을 수 있음. pre 와  post를 전후로 사용하면, 호출될 때 실행전과 후로 각각 표시됨.
+
 __4.5.2 NPX로 코드 포매팅 명령어 prettier 실행하기
+* NPX는 Node Package eXecute의 약자. Node 패키지 실행자임.
+* 본래 패키지를 실행하려면, node_modules/.bin/{패키지명} 경로로 명령어를 실행해야 하나, npx를 사용하면 npx {패키지명}을 경로를 생략해 실행할 수 있음.
+> 갑자기 공부하닥 VSCode를 저장할 때, 포멧을 자동정렬하고 싶어서 설정 변경함.
+
 _4.6 패키지 잠금
 _4.7 npm의 대안 yarn
 _학습 마무리

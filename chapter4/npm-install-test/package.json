@@ -3,6 +3,6 @@
     "lodash": "github:lodash/lodash#4.17.21"
   },
   "devDependencies": {
-    "jest": "^29.3.1"
+    "jest": "^29.7.0"
   }
 }
