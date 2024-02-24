@@ -124,16 +124,39 @@ _연습문제
 
 ---
 
-03장 Node.js와 익스프레스로 웹 애플리케이션 서버 구현하기
-_3.1 OK를 반환하는 서버 만들기
+### 03장 Node.js와 익스프레스로 웹 애플리케이션 서버 구현하기
+_3.1 OK를 반환하는 서버 만들기 (105)
 _3.2 라우터 만들기
 _3.3 createServer( ) 리팩터링하기
 _3.4 동적으로 응답하기
+
 _3.5 라우터 리팩터링하기
+* 맵을 활용하여 key를 넣으면, 함수가 반환되도록 설정
+* urlMap 을 코드 하단에 추가한 것은 const로 선언한 변수들이 초기화 전엔 읽을 수 없기 때문.
+    * 호이스팅 hoisting 은 클래스, 변수를 끌어올려서 선언되기 전에 사용할 수 있도록 함.
+    * 그러나 const 로 선언된 것은 안됨. (Uncaught ReferenceError 발생)
+
 _3.6 익스프레스 프레임워크 사용하기
+
 __3.6.1 익스프레스 설치하기
+* npm ls : 이 명령으로 의존성 확인이 가능.
+
 __3.6.2 나의 첫 익스프레스 서버 만들기
+* 여기 리팩토링에서는 function 선언자를 통해 함수를 만듦. 호이스팅을 이용하기 위해서.
+* req 변수를 사용하지 않기때문에 뺄 수도 있으나, '_'(언더바)로 처리 한 것도 인상적이다. 관례적으로 그렇게 한단다.
+
 __3.6.3 Node.js 라이브러리로 만든 서버를 익스프레스로 구현하기
+* app.use(express.json()) 은 req.body를 사용할 수 있게 함.
+* express.urlencoded({extended:true})는 컨텐트 타입이 application/x-www-form-urlencoded 인 경우 파싱 처리함.
+* express.urlencoded({extended:true})타입이란 body에 키=값&키2=값2 같은 키=값 조합 형태를 가진 데이터를 말함.
+* +id 처럼 사용하는 것은 문자열인 id를 숫형으로 변경한다는 뜻!! parseInt 사용하는 것과 같은 격.
+* filter는 모던자바스크립트에서 배열에서 특정요소를 삭제하는 방법으로 주로 사용.
+* if를 써서 return 하는 것을 early return 빠른 반환이라고 함. 이런 거.. 코드 가독성을 위해서도 좋음.
+* 참고사항
+    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+    * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce
+
 _3.7 익스프레스로 간단한 API 서버 만들기
 __3.7.1 게시판 API 코드 작성하기
 __3.7.2 API 규칙에 맞게 서버 구현하기
