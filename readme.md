@@ -274,10 +274,97 @@ _연습문제
 ### 05장 자바스크립트에서 비동기 처리하기
 
 _5.1 자바스크립트 비동기 소개
+* 콜백함수 : 요청이 끝난 후 실행할 함수를 매개변수로 추가
+* 프로미스 : 객체를 반환하는 방식
+* 어싱크 어웨이트 : 프로미스를 더욱 간단하게 async await라는 구문으로 변경한 문법.
+
 _5.2 콜백 함수 소개
+* 다음의 예제가 딱
+```
+const DB = [];
+
+function register(user) {
+    return saveDB(user, function (user) {
+        return sendEmail(user, function (user) {
+            return getResult(user);
+        });
+    });
+}
+
+function saveDB(user, callback) {
+    DB.push(user);
+    console.log(`save ${user.name} to DB`);
+    return callback(user);
+}
+
+function sendEmail(user, callback) {
+    console.log(`email to ${user.email}`);
+    return callback(user);
+}
+
+function getResult(user) {
+    return `success register ${user.name}`;
+}
+
+const result = register({ email: "andy@test.com", password: "1234", name: "andy" });
+console.log(result);
+```
+
 _5.3 Promise 객체
+* 비동기 실행을 동기화 하는 구문으로 사용. 약속은 세가지 상태를 가짐. 이행, 거절, 대기.
+* Promise는 객체이므로 new 연산자로 인스턴스로 생성.
+* * resolve() 함수가 실행되면 이행
+* * reject() 함수가 실행되면 거절로 변경
+```
+const DB = [];
+
+function saveDB(user) {
+    const oldDBSize = DB.length;
+    DB.push(user);
+    console.log(`save ${user.name} to DB`);
+    return new Promise((resolve, reject) => {
+        if (DB.length > oldDBSize) {
+            resolve(user);
+        } else {
+            reject(new Error("Save DB Error!"));
+        }
+    });
+}
+
+function sendEmail(user) {
+    console.log(`emailt to ${user.email}`);
+    return new Promise((resolve) => {
+        resolve(user);
+    });
+}
+
+function getResult(user) {
+    return new Promise((resolve, reject) => {
+        resolve(`success register ${user.name}`);
+    });
+}
+
+function registerByPromise(user) {
+    const result = saveDB(user)
+        .then(sendEmail)
+        .then(getResult)
+        .catch(error => new Error(error))
+        .finally(() => console.log("완료!"));
+    console.log(result);
+    return result;
+}
+
+const myUser = { email: "andy@test.com", password: "1234", name: "andy" };
+const result = registerByPromise(myUser);
+result.then(console.log);
+```
+
 __5.3.1 동시에 여러 Promise 객체 호출하기
+* Promise.all() 안에 배열로 호출함수 넣음.
+
 __5.3.2 Promise 예외 처리하기
+
+
 __5.3.3 프로미스의 문제점
 _5.4 async await 구문
 _학습 마무리
