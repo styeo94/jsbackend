@@ -367,8 +367,53 @@ __5.3.2 Promise 예외 처리하기
 
 __5.3.3 프로미스의 문제점
 > 여기서 axios 를 설치해 사용함.
-
+> 실습하면서 계속 느끼는 건데, 다음의 오류를 만나면.. 정말 해당 폴더에 파일, 모듈이 없는 것이라고 인식할 것.. 당황하지 말고!!
+```
+node:internal/modules/cjs/loader:959
+  throw err;
+  ^
+  ...
+  code: ?[32m'MODULE_NOT_FOUND'?[39m,
+  requireStack: []
+```
 _5.4 async await 구문
+* 현재 가장 최신의 비동기 처리 문법
+```
+for (let x of [...Array(10).keys()]) {
+  // ...
+}
+```
+> * keys() 배열의 키 목록을 반환
+> * ... 연산자가 신기한데, 배열의 키목록을 숫자값으로 변환한다는 의미
+* top 20 개 영화 순위를 보여주는 예제
+```
+const axios = require("axios");
+const url = "https://raw.githubusercontent.com/wapj/jsbackend/main/movieinfo.json";
+
+async function getTop20Movies(url) {
+
+    try {
+        const result = await axios.get(url);
+        const { data } = result;
+        if (!data.articleList || data.articleList.size == 0) {
+            throw new Error("데이터가 없습니다.");
+        }
+        const movieInfos = data.articleList.map((article, idx) => {
+            return { title: article.title, rank: idx + 1 };
+        });
+        for (let movieInfo of movieInfos) {
+            console.log(`[${movieInfo.rank}위 ${movieInfo.title}]`);
+        }
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
+getTop20Movies(url);
+```
+* Promise가 필요한 경우는 setTimeout() 사용시나, 여러 태스크를 동시에 실행하는 경우. 이 이외에는 모두 async await를 사용. 읽기 편한 코드는 디버깅에 유리.
+* async, await는 내부적으로는 제너레이터를 활용해 동작. <https://url.kr/ogculf>
+
 _학습 마무리
 _연습문제
 
