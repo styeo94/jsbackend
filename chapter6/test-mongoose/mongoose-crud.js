@@ -3,46 +3,56 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const Person = require("./person-model");
 
-mongoose.set("strictQuery", false); // Mongoose 7이상에서는 설정해줘야 경고가 뜨지 않음.
+mongoose.set("strictQuery", false); //1
 
 const app = express();
-app.use(bodyParser.json());
-app.listen(3000, () => {
-  console.log("Server started");
-  const mongodbUri =
-    "mongodb+srv://mymongo:test1234@cluster0.c4xru.mongodb.net/test?retryWrites=true&w=majority";
-  mongoose
-    .connect(mongodbUri, { useNewUrlParser: true })
-    .then(console.log("Connected to MongoDB"));
+app.use(bodyParser.json()); //2
+app.listen(3000, async () => {
+    console.log("Server started");
+    const mongodbUri = "mongodb+srv://styeo94:ioyDaQPRdgojHHCQ@cluster0.qofpazq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+
+    //3
+    mongoose
+        .connect(mongodbUri, {})
+        .then(console.log("Connected to MongoDB"));
+    
 });
 
+
+//4
 app.get("/person", async (req, res) => {
-  const person = await Person.find({});
-  res.send(person);
+    console.log("person")
+    const person = await Person.find({});
+    res.send(person);
 });
 
+//5
 app.get("/person/:email", async (req, res) => {
-  const person = await Person.findOne({ email: req.params.email });
-  res.send(person);
-});
+    const person = await Person.findOne({ email: req.params.email });
+    res.send(person);
+})
 
+//6
 app.post("/person", async (req, res) => {
-  const person = new Person(req.body);
-  await person.save();
-  res.send(person);
+    //const reuslt = await Person.create(req.body);
+    const person = new Person(req.body);
+    await person.save();
+    res.send(person);
 });
 
+//7
 app.put("/person/:email", async (req, res) => {
-  const person = await Person.findOneAndUpdate(
-    { email: req.params.email },
-    { $set: req.body },
-    { new: true }
-  );
-  console.log(person);
-  res.send(person);
+    const person = await Person.findOneAndUpdate(
+        { email: req.params.email },
+        { $set: req.body },
+        { new: true }
+    );
+    console.log(person);
+    res.send(person);
 });
 
+//6
 app.delete("/person/:email", async (req, res) => {
-  await Person.deleteMany({ email: req.params.email });
-  res.send({ success: true });
+    await Person.deleteMany({ email: req.params.email });
+    res.send({ success: true });
 });

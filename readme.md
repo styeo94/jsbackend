@@ -417,22 +417,52 @@ getTop20Movies(url);
 _학습 마무리
 _연습문제
 
+---
 
-06장 NoSQL 데이터베이스 몽고디비 사용하기
+### 06장 NoSQL 데이터베이스 몽고디비 사용하기
 _6.1 몽고디비 소개
 __6.1.1 데이터베이스 기본 용어
+
 __6.1.2 몽고디비 특징
+* 예전에는 MEAN 스텍 (몽고디비+익스프레스+앨귤러+엔진엑스) 스펙이 인기가 많았다고.
+* 몽고디비는 자바스크립트에 친화적.
+
 _6.2 몽고디비 아틀라스 설정하기
+> 이 책은 비동기관련해서 async await 를 사용하지만, 예외적으로 간단한 처리는 콜백 함수를 사용.
+
 _6.3 몽고디비 CRUD API 만들기
+> 실제 접속부분에서 이 책에서 제안해 준 userNewUrlParser는 더이상 넣을 필요 없는 옵션임.
+```
+const MongoClient = require('mongodb').MongoClient;
+const url = "mongodb+srv://sty**:<패스워드>@cluster0.qofpazq.mongodb.net/?retryWrites=true&w=majority&appName=Cl***";
+const client = new MongoClient(url, { /*useNewUrlParser: true*/ });
+```
+
 _6.4 몽고디비 콤파스로 데이터 확인하기
+* 몽고DB전용 GUI 시스템 <https://www.mongodb.com/try/download/compass> 다운로드!
+
 _6.5 몽구스를 사용해 CRUD 만들기
+* Node.js와 몽고디비간 네이티브 몽고 드라이브 만큼 많이 사용하는 몽구스!
+
 __6.5.1 몽구스 설치하기
+* 대표적으로 객체를 도큐먼트로 매핑하는 ODM (Object Document Mapper) 기능
+* 몽고디비 자체에는 스키마 설정 기능이 없지만, 몽구스는 있다!
+* * 이로써 유효성 검증을 할 수 있는 것!
+```
+npm install mongoose
+```
+
 __6.5.2 몽구스로 스키마 만들기
+
 __6.5.3 몽구스와 익스프레스로 CRUD API 만들기
+
 _6.6 REST 클라이언트로 API 테스트하기
+> 이부분의 테스트가 많이 아쉬운 것은 실제로 HTTP Client를 설치했음에도 동작이 안됐다는 거다. 그리고 몽구스 설명, 설치 다 좋았는데.. 이쯤에서 드는 생각이, 살짝 수박 겉할기 같달까? 그럼에도 백엔드에서 익혀야 할 것이 이토록 많다는 게, 버거움을 준다.
+
 _학습 마무리
 _연습문제
 
+---
 
 07장 페이지네이션되는 게시판 만들기
 _7.1 프로젝트 구조 소개
