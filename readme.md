@@ -528,6 +528,26 @@ npm i nodemon@2.0.20
   }
 ```
 
+* 유매니저가 가르쳐준 설정
+```
+nvm for windows (node, yarn 설치할 필요없음)
+
+nvm install 16.17.1
+nvm install 12.22.9
+
+nvm list
+nvm use 12.22.9
+
+npm install -g yarn
+
+yarn install
+npm install
+
+node -v
+npm -v
+```
+
+
 __7.5.4 글쓰기 API 만들기
 __7.5.5 리스트 API 만들기
 __7.5.6 상세페이지 API 만들기
