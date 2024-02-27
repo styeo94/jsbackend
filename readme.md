@@ -549,7 +549,18 @@ npm -v
 
 
 __7.5.4 글쓰기 API 만들기
+
 __7.5.5 리스트 API 만들기
+> 실습을 하다보니, 다음과 같은 생소한 코드를 만난다. A || B 라는 A 아니면, B 라는 형태의 변수할당이 이 세계에는 존재하는가 보다.
+```
+app.get("/", async (req, res) => {
+    // res.render("home", { title: "테스트 게시판" });
+    const page = parseInt(req.query.page) || 1;
+    const search = req.query.search || "";
+    ...
+```
+> home.handlebars 를 수정하면서, 내장함수가 언급된다. 화면에 목록을 표출하기 위해 사용하는 {{each}} 와 {{with}} 가 그것이다. 이와 더불어 앞전에 개발해 놓은 handlebars-helpers도 여기에 등장한다. 이런 것들이 각 node.js 모듈마다 응용법, 사용법이 다를 수 밖에 없으니, 항상 그려려니 하는 마음으로 코드를 볼 줄 알아야 할 것 같다.
+
 __7.5.6 상세페이지 API 만들기
 __7.5.7 글 수정 API
 __7.5.8 글 삭제 API
