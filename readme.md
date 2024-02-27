@@ -464,12 +464,20 @@ _연습문제
 
 ---
 
-07장 페이지네이션되는 게시판 만들기
+### 07장 페이지네이션되는 게시판 만들기
 _7.1 프로젝트 구조 소개
 _7.2 게시판 프로젝트 셋업
 __7.2.1 Node.js 프로젝트 초기 설정
+
 __7.2.2 익스프레스 설치 및 프로젝트 디렉터리 구조 잡기
+> 컨트롤러의 역할이 인증, 유효성 검증 등을 하고 문제가 없다면 비즈니스 로직을 처리하는 서비스 계층으로 함수를 호출하는 역할. 가끔 이런 컨트롤의 역할을 잊고.. 거기다가 모두 구현하는 경우도 왕왕 있음.
+
 __7.2.3 핸들바 템플릿 엔진 설치 및 설정하기
+* 익스프레스에서 사용하는 템플릿 엔진은 Pug, EJS, Mustache, handlebar 등이 있음.
+  ```
+  npm i express-handlebars@6.0.3
+  ```
+
 _7.3 화면 기획하기
 __7.3.1 리스트 화면 기획
 __7.3.2 글쓰기 화면 기획
@@ -478,10 +486,48 @@ _7.4 UI 화면 만들기
 __7.4.1 리스트 UI 만들기
 __7.4.2 글쓰기 UI 만들기
 __7.4.3 상세페이지 UI 만들기
+
 _7.5 API 만들기
+
 __7.5.1 몽고디비 연결을 위한 유틸리티 만들기
+```
+const { MongoClient } = require("mongodb");
+const uri = "mongodb+srv://sty**:<패스워드>@cluster0.qofpazq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/board";
+
+module.exports = function (callback) {
+    return MongoClient.connect(uri, callback);
+}
+```
+* 생성한 커넥션js는 아래와 같이 app.js에 연결
+```
+const mongodbConnection = require("./configs/mongodb-connection");
+```
+
 __7.5.2 UI 페이지에서 사용할 핸들바 커스텀 헬퍼 만들기
+* 커스텀 헬퍼를 만들어 연결
+```
+// app.engine("handlebars", handlebars.engine());
+
+app.engine(
+    "handlebars",
+    handlebars.create({
+        helpers: require("./configs/handlebars-helpers"),
+    }).engine,
+);
+```
+
 __7.5.3 nodemon 설정하기
+* 서버 코드를 작성하면, 서버 재기동을 자동으로 해주는 기능
+```
+npm i nodemon@2.0.20
+```
+* 이어 package.json 에서 다음과 같이 처리
+```
+  "scripts": {
+    "start": "npx nodemon app.js",
+  }
+```
+
 __7.5.4 글쓰기 API 만들기
 __7.5.5 리스트 API 만들기
 __7.5.6 상세페이지 API 만들기
