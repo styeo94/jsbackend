@@ -1,4 +1,7 @@
+//import { getPostByIdAndPassword } from '../../board-tailwind/services/post-service';
+//import { projectionOption } from '../../board-tailwind/services/post-service';
 const paginator = require("../utils/paginator");
+const { ObjectId } = require("mongodb");
 
 async function list(collection, page, search) {
     const perPage = 10;
@@ -18,7 +21,42 @@ async function writePost(collection, post) {
     return await collection.insertOne(post);
 }
 
+const projectionOption = {
+    projection: {
+        password: 0,
+        "comments.password": 0,
+    }
+}
+
+async function getDetailPost(collection, id) {
+    return await collection.findOneAndUpdate(
+        { _id: ObjectId(id) }
+        , { $inc: { hits: 1 } }
+        , projectionOption)
+}
+
+async function getPostByIdAndPassword(collection, { id, password }) {
+    return await collection.findOne({ _id: ObjectId(id), password: password }, projectionOption);
+}
+
+async function getPostById(collection, id) {
+    return await collection.findOne({ _id: ObjectId(id) }, projectionOption);
+}
+
+async function updatePost(collection, id, post) {
+    const toUpdatePost = {
+        $set: {
+            ...post,
+        },
+    };
+    return await collection.updateOne({ _id: ObjectId(id) }, toUpdatePost);
+}
+
 module.exports = {
     list,
     writePost,
+    getDetailPost,
+    getPostById,
+    getPostByIdAndPassword,
+    updatePost,
 };

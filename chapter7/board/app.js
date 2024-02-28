@@ -1,4 +1,5 @@
 const express = require("express");
+const { ObjectId } = require("mongodb");
 const postService = require("./services/post-service");
 const handlebars = require("express-handlebars");
 const app = express();
@@ -40,16 +41,95 @@ app.get("/write", (req, res) => {
 app.post("/write", async (req, res) => {
     // res.render("write", { title: "테스트 게시판" });
     const post = req.body;
-    // 글쓰기 후 결과 반환
     const result = await postService.writePost(collection, post);
-    // 생성된 도큐먼트의 _id로 상세 이동
     res.redirect(`/detail/${result.insertedId}`);
 });
 
-app.get("/detail/:id", (req, res) => {
-    res.render("detail", { title: "테스트 게시판" });
+app.get("/detail/:id", async (req, res) => {
+    // res.render("detail", { title: "테스트 게시판" });
+    const result = await postService.getDetailPost(collection, req.params.id);
+    res.render("detail", {
+        title: "테스트 게시판",
+        post: result.value,
+    });
 });
 
+app.post("/check-password", async (req, res) => {
+    const { id, password } = req.body;
+    const post = await postService.getPostByIdAndPassword(collection, { id, password });
+
+    if (!post) {
+        return res.status(404).json({ isExists: false });
+    } else {
+        return res.json({ isExists: true });
+    }
+});
+
+app.get("/modify/:id", async (req, res) => {
+    const post = await postService.getPostById(collection, req.params.id);
+    console.log(post);
+    res.render("write", { title: "테스트 게시판", mode: "modify", post });
+});
+
+app.post("/modify/", async (req, res) => {
+    const { id, title, writer, password, content } = req.body;
+
+    const post = {
+        title,
+        writer,
+        password,
+        content,
+        createDt: new Date().toISOString(),
+    };
+
+    const result = postService.updatePost(collection, id, post);
+    res.redirect(`/detail/${id}`);
+});
+
+app.delete("/delete", async (req, res) => {
+    const { id, password } = req.body;
+    try {
+        const result = await collection.deleteOne({ _id: ObjectId(id), password: password });
+        
+        if (result.deletedCount !== 1) {
+            console.log("삭제 실패");
+            return res.json({ isSuccess: false });
+        } 
+        return res.json({ isSuccess: true });
+
+    } catch (error) {
+        console.error(error);
+        return res.json({ isSuccess: false });
+    }
+});
+
+app.post("/write-comment", async (req, res) => {
+    const { id, name, password, comment } = req.body;
+    const post = await postService.getPostById(collection, id);
+
+    if (post.comments) {
+        post.comments.push({
+            idx: post.comments.length + 1,
+            name,
+            password,
+            comment,
+            createDt : new Date().toISOString(),
+        });
+    } else {
+        post.comments = [
+            {
+                idx: 1,
+                name,
+                password,
+                comment,
+                createDt: new Date().toISOString(),
+            },
+        ];
+    }
+
+    postService.updatePost(collection, id, post);
+    return res.redirect(`/detail/${id}`);
+});
 
 let collection;
 app.listen(3000, async () => {

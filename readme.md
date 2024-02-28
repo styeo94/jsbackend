@@ -563,8 +563,47 @@ app.get("/", async (req, res) => {
 
 __7.5.6 상세페이지 API 만들기
 __7.5.7 글 수정 API
+* javascript의 펼침연산자 (spread operator) 모르면 못쓰는 기능.
+```
+    const postOption = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }
+
+    async function modifyPost() {
+
+        ..<중간생략>..
+
+        const result = await fetch("/check-password", {
+            ...postOption,
+            body: JSON.stringify({ id:"{{post._id}}", password })
+        });
+```
+* 결국 위의 결과는 아래와 같은 것.
+```
+    async function modifyPost() {
+
+        ..<중간생략>..
+
+        const result = await fetch("/check-password", {
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            },
+            body: JSON.stringify({ id:"{{post._id}}", password })
+        });
+```
+* 위의 body에서 JSON.stringify 을 사용하는 이유는 HTTP 프로토콜이 JSON타입을 알지 못하므로 문자열 형태로 변경하기 위해 조치하는 것임. (이 이유가 늘 궁금하긴 했음. 발음은 스트링어파이)
+
 __7.5.8 글 삭제 API
+
 __7.5.9 댓글 추가 API
+> POST이면 req에 body 데이터가 담김.
+
 __7.5.10 댓글 삭제 API
 _학습 마무리
 _연습문제
