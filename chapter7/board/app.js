@@ -90,11 +90,11 @@ app.delete("/delete", async (req, res) => {
     const { id, password } = req.body;
     try {
         const result = await collection.deleteOne({ _id: ObjectId(id), password: password });
-        
+
         if (result.deletedCount !== 1) {
             console.log("삭제 실패");
             return res.json({ isSuccess: false });
-        } 
+        }
         return res.json({ isSuccess: true });
 
     } catch (error) {
@@ -113,7 +113,7 @@ app.post("/write-comment", async (req, res) => {
             name,
             password,
             comment,
-            createDt : new Date().toISOString(),
+            createDt: new Date().toISOString(),
         });
     } else {
         post.comments = [
@@ -129,6 +129,27 @@ app.post("/write-comment", async (req, res) => {
 
     postService.updatePost(collection, id, post);
     return res.redirect(`/detail/${id}`);
+});
+
+app.delete("/delete-comment", async (req, res) => {
+    const { id, idx, password } = req.body;
+
+    const post = await collection.findOne(
+        {
+            _id: ObjectId(id),
+            comments: { $elemMatch: { idx: parseInt(idx), password } },
+        },
+        postService.projectionOpeion,
+    );
+
+    if (!post) {
+        return res.json({ isSuccess: false });
+    }
+
+    post.comments = post.comments.filter((comment) => comment.idx != idx);
+    postService.updatePost(collection, id, post);
+    return res.json({ isSuccess: true });
+
 });
 
 let collection;
