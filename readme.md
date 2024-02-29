@@ -686,14 +686,67 @@ __8.3.2 타입스크립트 설정하기
   * 리포지토리 : 데이터 저장
   
 __8.3.3 NestJS의 모듈과 컨트롤러 만들기
-__8.3.4 hello-nest 앱 실행시켜보기
-__8.3.5 NestJS의 네이밍 규칙
 
+__8.3.4 hello-nest 앱 실행시켜보기
+* NestJs에서 진입점으로 bootstrap()으로 이름 짓는 건 관행.
+* app.listen(3000)은 NestJs 에서 사용하는 코드가 익스프레스와 같기 때문.
+* 타입스크립트로 만든 프로그램을 실행하려면 다음 패키지 필요
+```
+npx ts-node-dev src/main.ts
+```
+
+__8.3.5 NestJS의 네이밍 규칙
+* 파일은 . 으로 연결. 모듈이 둘 이상의 단어로 구성되어 있으면, 대시로 연결
+    ```
+    //<모듈명>.<컴포넌트명>
+    hello.controller.ts
+    my-first.controller.ts
+    ```
+* 클래스명은 낙타 표기법Camel Case
+    ```
+    //<모듈명><컴포넌트명>
+    HelloController
+    ```
+* 같은 디렉터리에 있는 클래스는 index.ts를 통해 임포트하는 것을 권장
+    ```
+    // index.ts를 사용하지 않는 경우
+    import { MyFirstController } from './controllers/my-first.controller'
+    import { MySecondController } from './controllers/my-second.controller'
+
+    // index.ts를 사용하는 경우
+    import { MyFirstController, MySecondController } from './controllers'
+    ```
+* 타입스크립트에서는 인터페이스를 많이 사용. ISeries 처럼 하지 않고 Series로 작명
+    ```
+    interface Series {}
+    interface BookSeries extends Series {}
+    class MovieSeries extends Series {}
+    ```
 _8.4 NestJS로 웹 API 만들기
+* 블로그 만들기 실행 (8.4-API만들기, 8.5-의존성주입, 8.6-몽고DB연결).
+
 __8.4.1 프로젝트 생성과 설정
+* nest-cli는 CLI 프로그램이므로 global 옵션을 사용해 어디서든 사용가능하도록 해야 함.
+```
+npm install -g @nestjs/cli
+```
+* 프로젝트 생성
+```
+nest new blog
+```
+> 위 설치 중 에러가 발생했다. 원인을 찾아보니 KT 망 문제라는 지적이 많다. DNS를 8.8.8.8 로 변경하니 바로 되네..
+* 프로젝트 설치 확인 (./blog/main.ts 시작 파일)
+```
+cd blog
+npm install
+npm run start
+```
 __8.4.2 컨트롤러 만들기
 __8.4.3 블로그 API 작성하기
 __8.4.4 메모리에 데이터를 저장하는 API 만들기
+```
+npm run start:dev
+```
 __8.4.5 파일에 정보를 저장하도록 API 업그레이드하기
 _8.5 의존성 주입하기
 _8.6 몽고디비 연동하기
