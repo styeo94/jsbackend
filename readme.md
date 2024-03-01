@@ -1125,6 +1125,7 @@ npm install sqlite3 typeorm @nestjs/typeorm
 ..생략..
 ```
 * 데이터베이스별 타입 및 확장자
+
 | 이름          | 타입      |
 | ------------- | ---------- |
 | SQLite | 'sqlite'  |
