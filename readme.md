@@ -1092,8 +1092,49 @@ bootstrap();
 * 인가는 본 범위가 아님. <https://docs.nestjs.com/security/authorization> 참고
 #### _10.1 실습용 프로젝트 설정하기
 ##### __10.1.1 nest-cli로 프로젝트 생성하기
+```
+nest new nest-auth-test
+```
+![img_explain](./images/jsbackend_10_01.PNG)
 ##### __10.1.2 User 모듈 생성하기
+```
+cd nest-auth-test
+nest g module user
+nest g controller user --no-spec
+nest g service user --no-spec
+```
 ##### __10.1.3 SQLite 데이터베이스 설정하기
+* SQLite 엘 필요한 sqlLite3, typeorm, @nestjs/typeorm 을 설치
+```
+npm install sqlite3 typeorm @nestjs/typeorm
+```
+* app.module.ts 수정
+```
+..생략..
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'nest-auth-test.sqlite',
+      entities: [],
+      synchronize: true,
+      logging: true,
+    }),
+    UserModule,
+  ],
+..생략..
+```
+* 데이터베이스별 타입 및 확장자
+| 이름          | 타입      |
+| ------------- | ---------- |
+| SQLite | 'sqlite'  |
+| MySql | 'mysql'  |
+| PostgreSql | 'postgres'  |
+| CockroachDB | 'cockroachdb'  |
+| Oracle | 'oracle'  |
+| MS SQL | 'sqlserver'  |
+| SAP/HANA | 'sap'  |
+| sql.js | 'sqljs'  |
 
 #### _10.2 유저 모듈의 엔티티, 서비스, 컨트롤러 생성하기
 ##### __10.2.1 엔티티 만들기
