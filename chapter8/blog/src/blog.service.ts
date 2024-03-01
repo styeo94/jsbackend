@@ -1,5 +1,6 @@
 import { PostDto } from './blog.model';
-import { BlogFileRepository, BlogRepository } from './blog.repository';
+// import { BlogFileRepository, BlogRepository } from './blog.repository';
+import { BlogMongoRepository } from './blog.repository';
 /* 의존성주입 File 1/3*/
 import { Injectable } from '@nestjs/common';
 
@@ -14,7 +15,9 @@ export class BlogService {
     // }
 
     /* 의존성주입 File 3/3 */
-    constructor(private blogRepository: BlogFileRepository) {}
+    // constructor(private blogRepository: BlogFileRepository) { }
+
+    constructor(private blogRepository: BlogMongoRepository) { }
 
     async getAllPosts() {
         //return this.posts;

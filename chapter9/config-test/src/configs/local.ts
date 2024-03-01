@@ -1,3 +1,3 @@
 export default {
-  dbInfo: 'http://localhost:3306',
-};
+    dbInfo: 'http://localhost:3306',
+}

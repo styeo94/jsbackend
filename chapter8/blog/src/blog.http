@@ -12,11 +12,11 @@ Content-Type: application/json
     "name": "이름"
 }
 
-GET {{server}}/blog/2
+GET {{server}}/blog/65e13b44dfd54e75236016e0
 
-DELETE {{server}}/blog/3
+DELETE {{server}}/blog/65e13b44dfd54e75236016e0
 
-PUT {{server}}/blog/3
+PUT {{server}}/blog/65e13b4cdfd54e75236016e4
 Content-Type: application/json
 
 {

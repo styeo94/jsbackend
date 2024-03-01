@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class AppController {
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) { }
 
   @Get()
   getHello(): string {
@@ -26,10 +26,5 @@ export class AppController {
   @Get('redis-info')
   getRedisInfo(): string {
     return `${this.configService.get('redis.host')}:${this.configService.get('redis.port')}`;
-  }
-
-  @Get('server-url')
-  getServerUrl(): string {
-    return this.configService.get('SERVER_URL');
   }
 }
