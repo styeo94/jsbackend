@@ -1185,9 +1185,42 @@ npm install -D @types/bcrypt
 > 직접 실행하면서 하다보니, install만 했을 뿐인데, .git 생성되는 기분.. 이러면 branch가 꼬이잖아?
 
 ##### __10.4.3 sqlite 익스텐션으로 테이블 확인하기
-
+* SQLite 익스텍션을 설치해야만 해당 내용을 따라 할 수 있음.
+> 저자가 친절하게 잘 진행하다가 왜 이건.. 이렇게 skip했는지 모르겠음. 어쨌든 설치했고, .sqlite 파일을 보게 되니 매우 매력적인 도구가 될 것 같다는 생각이 듦. 어떤 프로젝트라도 할 수 있을 것만 같음.
 #### _10.5 쿠키를 사용한 인증 구현하기
+* 보통 가드Guard와 함께 사용. 가드는 특정상황(권한, 롤, 액세스컨트롤)에서 받은 요청을 추가한 라우트 메서드에서 처리할지 말지 결정하는 역할.
 ##### __10.5.1 AuthService에 이메일과 패스워드 검증 로직 만들기
+```
+    async validateUser(email: string, password: string) {
+        ..생략..
+
+        const { password: hashedPassword, ...userInfo } = user;
+
+        if (bcrypt.compareSync(password, hashedPassword)) {
+            return userInfo;
+        }
+        return null;
+    }
+```
+> 저기서 모르겠는 게, hashedPassword는 그 어디에도 선언되거나 받은 정보가 아닌데, 어떻게 hashedPassword가 되었는가 하는 것. 그리고 저 userInfo는 도데체 어디서 떨어진 건지.
+> 실습하는 과정에서 오타로 인해 상당한 시간을 허비했다. 문제는 auth.http 파일에서 호출하는 부분인데, 여기의 json 파일 맨 마지막 부분에 , "콤마"가 있었던 것. 그러나 request 보내는 body 부분에서 그부분이 쌍따옴표가 제대로 마감처리되지 않았다는 식으로 에러가 뜨는 게 아닌가. 이것은 제아무리 console.log를 찍어도 나올 수 없는 구조다. 왜냐하면, "서버가 요청을 이해하지 못한" 상황이니 말이다. 에러는 다음과 같다.
+```
+HTTP/1.1 400 Bad Request
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 112
+ETag: W/"70-5V33XSeYhc/lOyYm2mSKzSZxKRQ"
+Date: Sat, 02 Mar 2024 20:46:12 GMT
+Connection: close
+
+{
+  "message": "Expected double-quoted property name in JSON at position 62",
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+> 이번 에러를 통해 NestJS 를 들어가서 여러 예제를 확인해 봤다. 분명 지금의 과정은 일부 발췌일 뿐이라는 확신은 틀리지 않았다. 나중에 좀더 확장해서 공부해 볼 수 있는 것들이 거기에 가득했다!
+
 ##### __10.5.2 가드를 사용해 인증됐는지 검사하기
 
 #### _10.6 패스포트와 세션을 사용한 인증 구현하기
