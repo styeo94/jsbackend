@@ -1,0 +1,11 @@
+@server = http://localhost:3000
+### 회원가입
+
+POST {{server}}/auth/register
+Content-Type: application/json
+
+{
+    "email" : "andy1@podo.com",
+    "password" : "1234",
+    "username" : "andy"
+}
