@@ -1222,8 +1222,48 @@ Connection: close
 > 이번 에러를 통해 NestJS 를 들어가서 여러 예제를 확인해 봤다. 분명 지금의 과정은 일부 발췌일 뿐이라는 확신은 틀리지 않았다. 나중에 좀더 확장해서 공부해 볼 수 있는 것들이 거기에 가득했다!
 
 ##### __10.5.2 가드를 사용해 인증됐는지 검사하기
+![img_explain](./images/jsbackend_10_02.PNG)
+* HTTP 헤더의 쿠키를 읽으려면 cookie-parser 패키지 설치해야 함.
+```
+npm i cookie-parser
+```
+> 개인적으로 auth.guard.ts를 알게 된 것에 기쁘다. 실습대로 되지 않아, 디버깅 해 보니 눈으로만 보던 것보다 생생하게 원리를 이해한 것 같다. 다음의 구현부분을 보자.
+```
+    async canActivate(context: any): Promise<boolean> {
+        const request = context.switchToHttp().getRequest();
 
+        // 처음헷갈렸던 부분이 여긴데, 쿠키많 있다고 통과?
+        // 여기는 보안이나, 비즈니스별로 해야할 일이 많을 것같다.
+        if (request.cookies['login']) {
+            return true;
+        }
+
+        // 그다음 헷갈렸던 부분인데 이는 다소 선입견적인 부분이라 부끄럽다.
+        // 위의 쿠키확인 부분의 else 정도로 이해한 것인데, 알고보니
+        // 인증 id/pw가 넘어온 것인지를 체크하는 구간이다.
+        if (!request.body.email || !request.body.password) {
+            return false;
+        }
+
+        // 만일 위 부분에서 무사통과가 되면 사용자 인증을 처리한다.
+        const user = await this.authService.validateUser(
+            request.body.email,
+            request.body.password,
+        );
+
+        if (!user) {
+            return false;
+        }
+        request.user = user;
+        return true;
+    }
+```
 #### _10.6 패스포트와 세션을 사용한 인증 구현하기
+* 쿠키만으로는 위변조와 탈취의 위험이 있음. 따라서 서버의 특정공간에 저장하는 세션활용.
+* 인증로직은 패스포트passport 사용. 이는 스트래티지strategy 파일을 생성해서 사용.
+* 지금까지 처럼 가드 안에 인증로직을 두는 것이 아닌, 별도의 스트래티지 파일을 필요로함.
+* 또한 세션 데이터를 읽어 올 때 쓸 세션 시리얼라이저 session serializer도 필요.
+![img_explain](./images/jsbackend_10_03.PNG)
 ##### __10.6.1 라이브러리 설치 및 설정
 ##### __10.6.2 로그인과 인증에 사용할 가드 구현하기
 ##### __10.6.3 세션에 정보를 저장하고 읽는 세션 시리얼라이저 구현하기
