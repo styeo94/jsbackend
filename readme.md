@@ -1265,6 +1265,11 @@ npm i cookie-parser
 * 또한 세션 데이터를 읽어 올 때 쓸 세션 시리얼라이저 session serializer도 필요.
 ![img_explain](./images/jsbackend_10_03.PNG)
 ##### __10.6.1 라이브러리 설치 및 설정
+```
+npm i @nestjs/passport passport-local express-session
+npm i -D @types/passport-local @types/express-session
+```
+
 ##### __10.6.2 로그인과 인증에 사용할 가드 구현하기
 ##### __10.6.3 세션에 정보를 저장하고 읽는 세션 시리얼라이저 구현하기
 ##### __10.6.4 email, password 인증 로직이 있는 LocalStrategy 파일 작성하기
