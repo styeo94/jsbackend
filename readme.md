@@ -1232,7 +1232,7 @@ npm i cookie-parser
     async canActivate(context: any): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
 
-        // 처음헷갈렸던 부분이 여긴데, 쿠키많 있다고 통과?
+        // 처음헷갈렸던 부분이 여긴데, 쿠키만 있다고 통과?
         // 여기는 보안이나, 비즈니스별로 해야할 일이 많을 것같다.
         if (request.cookies['login']) {
             return true;
@@ -1269,10 +1269,39 @@ npm i cookie-parser
 npm i @nestjs/passport passport-local express-session
 npm i -D @types/passport-local @types/express-session
 ```
+* main.ts를 수정해야 함.
+```
+..생략..
+import session from 'express-session';
+import passport from 'passport';
 
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
+  app.use(cookieParser());,
+  app.use(
+    session({
+      // 아래 secret 은 암호화할 때 사용할 키(key)로 절대 유출되지 않도록 주의!!
+      secret: 'very-important-secret',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { maxAge: 3600000 },
+    }),
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
+  await app.listen(3000);
+}
+bootstrap();
+
+```
 ##### __10.6.2 로그인과 인증에 사용할 가드 구현하기
+* 여기서는 로그인에 사용가드와 인증후에 사용할 가드로 나눠서 생성 (auth.guard.ts)
 ##### __10.6.3 세션에 정보를 저장하고 읽는 세션 시리얼라이저 구현하기
+* session.serializer.ts 구현
+> 이게 참 이해하기 어려운 부분인데, 그냥 그러려니 하고 넘어가면 맘 편한 것. 앞서 auth.guard.ts에서 호출한 super.LogIn() 이라는 함수가 처리하면서 바로 session.serializer.ts 에서 구현된 serializeUser()를 실행해서 가져간단다. 그래서 이걸 구현해야 하는 것이라고. 결국은 아키텍처적으로다가 우리가 만질 수 있는 부분은 한계가 있는 것이지 싶다. 저들이 은닉화 해놓은 것의 단계들을 파편적으로 구현해 내는 거 말고는. 모르면 개발할 수 없는 것을 다시 뼈저리게 느낀다.
 ##### __10.6.4 email, password 인증 로직이 있는 LocalStrategy 파일 작성하기
+* 인증 유형별 다양한 스트래티지가 존재함.
 ##### __10.6.5 auth.module.ts에 설정 추가하기
 ##### __10.6.6 테스트하기
 ##### __10.6.7 로그인과 세션 저장까지 순서
