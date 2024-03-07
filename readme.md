@@ -1769,11 +1769,17 @@ npm i @nestjs/serve-static
 
 #### \_13.1 웹소켓 소개
 
+- 기존 HTTP 통신은 단방향 통신, 웹소켓은 양방향 통신
+
 ##### \_\_13.1.1 웹소켓의 동작 방법
 
 #### \_13.2 메아리 애플리케이션 만들기 : 웹소켓
 
 ##### \_\_13.2.1 ws 패키지 설치하기
+
+```
+npm install ws
+```
 
 ##### \_\_13.2.2 서버 측 구축하기 : server.js 파일 작성 및 서버 구동
 
@@ -1789,9 +1795,21 @@ npm i @nestjs/serve-static
 
 ##### \_\_13.3.2 패키지 설치하기
 
+- 양방향 통신 어플리케이션 작성 시 필요
+  - @nestjs/websockets : 웹소켓 프로토콜 기반의 프로그램 작성 시 필요
+  - @nestjs/platform-socket.io : @nestjs/platform-ws로 변경할수도. 그러나 ws(웹소켓으로 작동).
+- 개발 시 타입 정보를 편하게 가져오기 위해 @types/socket.io 도 설치
+
+```
+npm i @nestjs/websockets @nestjs/platform-socket.io
+npm i -D @types/socket.io
+```
+
 ##### \_\_13.3.3 html 파일을 불러오도록 main.ts 설정하기
 
 ##### \_\_13.3.4 서버 측 작업을 위한 게이트웨이 만들기
+
+- 프로토콜이 HTTP라면 컨트롤러로부터 요청을 받고, WS라면 게이트웨이로부터 요청을 받는다. 진입점이 다르고 사요하는 데코레이터가 약간 다름!
 
 ##### \_\_13.3.5 게이트웨이를 모듈에 등록하기
 
