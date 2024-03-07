@@ -1,0 +1,38 @@
+@server = http://localhost:3000
+
+### Create
+POST {{server}}/user/create
+Content-Type: application/json
+
+{
+    "username": "andy",
+    "password": "test1234",
+    "email": "andy@podo.com"
+}
+
+### GetUser
+GET {{server}}/user/getUser/andy@podo.com
+
+### Update User
+PUT {{server}}/user/update/andy@podo.com
+Content-Type: application/json
+
+{
+    "email": "andy@podo.com",
+    "username": "andy2",
+    "password": "test12345"
+}
+
+### Delete User
+DELETE {{server}}/user/delete/andy@podo.com
+
+
+### Create (잘못된 이메일 검증)
+POST {{server}}/user/create
+Content-Type: application/json
+
+{
+    "username": "andy",
+    "password": "test1234",
+    "email": "andy-podo"
+}
