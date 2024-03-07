@@ -1731,6 +1731,12 @@ console.cloud.google.com
 
 #### \_12.1 프로젝트 생성 및 의존성 설치하기
 
+```
+nest new nest-file-upload
+cd nest-file-upload
+npm i -D @types/multer
+```
+
 #### \_12.2 파일 업로드 API를 만들고 테스트하기
 
 ##### \_\_12.2.1 테스트하기
@@ -1741,7 +1747,15 @@ console.cloud.google.com
 
 #### \_12.4 정적 파일 서비스하기
 
+- 정적 파일 서비스를 실행하기 위해서는 다음 패키지를 설치해야함.
+
+```
+npm i @nestjs/serve-static
+```
+
 ##### \_\_12.4.1 테스트하기
+
+> 이미지 잘 올라가고, 브라우저에서 확인 됨.
 
 #### \_12.5 HTML 폼으로 업로드하기
 
