@@ -1,6 +1,7 @@
 const socket = io('http://localhost:3000/chat');
 const roomSocket = io('http://localhost:3000/room');
 const nickname = prompt('닉네임을 입력해 주세요.');
+let currentRoom = '';
 
 $(document).ready(function () {
   $('#message').on('keydown', function (event) {
@@ -15,10 +16,18 @@ socket.on('connect', () => {
 });
 
 function sendMessage() {
+
+  if (currentRoom === '') {
+    alert('방을 선택해 주세요.')
+    return;
+  }
   const message = $('#message').val();
+  const data = { message, nickname, room: currentRoom };
   $('#chat').append(`<div>나 : ${message}</div>`);
-  socket.emit('message', { message, nickname });
+  //socket.emit('message', { message, nickname });
+  roomSocket.emit('message', data);
   $('#message').val('');
+  return false;
 }
 
 socket.on('message', (message) => {
@@ -30,6 +39,15 @@ function createRoom() {
   roomSocket.emit('createRoom', { room, nickname });
 }
 
+socket.on('notice', (data) => {
+  $('#notice').append(`<div>${data.message}</div>`);
+});
+
+roomSocket.on('message', (data) => {
+  console.log(data);
+  $('#chat').append(`<div>${data.message}</div>`);
+});
+
 roomSocket.on("rooms", (data) => {
   console.log(data);
   $('#rooms').empty();
@@ -37,3 +55,9 @@ roomSocket.on("rooms", (data) => {
     $('#rooms').append(`<li>${room} <button onclick="joinRoom('${room}')">join</button></li>`);
   });
 });
+
+function joinRoom(room) {
+  roomSocket.emit('joinRoom', { room, nickname, toLeaveRoom: currentRoom });
+  $('#chat').html('');
+  currentRoom = room;
+}
